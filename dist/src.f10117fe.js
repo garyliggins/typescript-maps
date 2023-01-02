@@ -22792,6 +22792,9 @@ var User = /** @class */function () {
       lng: parseFloat(faker_1.faker.address.longitude())
     };
   }
+  User.prototype.markerContent = function () {
+    return "<div>\n        <h1>User Name: ".concat(this.name, "</h1>\n        </div>\n        ");
+  };
   return User;
 }();
 exports.User = User;
@@ -22812,6 +22815,9 @@ var Company = /** @class */function () {
       lng: parseFloat(faker_1.faker.address.longitude())
     };
   }
+  Company.prototype.markerContent = function () {
+    return "<div>\n                <h1>Company name: ".concat(this.companyName, "</h1>\n                <h3>Catchphrase: ").concat(this.catchPhrase, "</h3>\n                </div>");
+  };
   return Company;
 }();
 exports.Company = Company;
@@ -22832,6 +22838,23 @@ var CustomMap = /** @class */function () {
       }
     });
   }
+  //this function eliminates the repeating code and lets company or user use this function to add a marker
+  CustomMap.prototype.addMarker = function (mappable) {
+    var _this = this;
+    var marker = new google.maps.Marker({
+      map: this.googleMap,
+      position: {
+        lat: mappable.location.lat,
+        lng: mappable.location.lng
+      }
+    });
+    marker.addListener("click", function () {
+      var infoWindow = new google.maps.InfoWindow({
+        content: mappable.markerContent()
+      });
+      infoWindow.open(_this.googleMap, marker);
+    });
+  };
   return CustomMap;
 }();
 exports.CustomMap = CustomMap;
@@ -22852,7 +22875,11 @@ console.log(user);
 var company = new Company_1.Company();
 console.log(company);
 //creating a instance of a google map
-new CustomMap_1.CustomMap("map");
+var customMap = new CustomMap_1.CustomMap("map");
+// taking the instance of the google map. then using the addUserMarker function and passing in the user instance which will add the marker where the location that the user has in the user class
+customMap.addMarker(user);
+// taking the instance of the google map. then using the addCompanyMarker function and passing in the company instance which will add the marker where the location that the company has in the company class
+customMap.addMarker(company);
 },{"./User":"src/User.ts","./Company":"src/Company.ts","./CustomMap":"src/CustomMap.ts"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -22878,7 +22905,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61632" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53966" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
